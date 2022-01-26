@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">getter2</string>
+    <string name="tab_text_1">Decider</string>
+    <string name="tab_text_2">CIA database</string>
+    <string name="tab_text_3">Sunset</string>
+
+    <string name="flip_tv">TextView</string>
+    <string name="flip_iv_contentDescription">nice picture</string>
+    <string name="flip_refresh_btn_name">flip</string>
+    <string name="flip_progress_bar_msg">thinking…</string>
+    <string name="ok">OK</string>
+    <string name="flip_push_the_button">Flip the coin</string>
+    <string name="cia_full_name">Central\nIntelligence\nAgency</string>
+    <string name="sunset_contentDescription">sunset content</string>
+    <string name="fine_location_permission_rationale">The fine location permission is needed for core functionality.</string>
+    <string name="fine_permission_denied_explanation">Fine location permission was denied but is needed for core functionality.</string>
+    <string name="permission_approved_explanation">You approved FINE location, carry (and click) on!</string>
+
+
+
+</resources>
