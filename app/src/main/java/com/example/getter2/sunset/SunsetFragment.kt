@@ -54,21 +54,32 @@ class SunsetFragment : Fragment() {
     private val sunsets = arrayOf(
         R.drawable.ss01,
         R.drawable.ss02,
-        R.drawable.ss03
+        R.drawable.ss03,
+        R.drawable.ss04,
+        R.drawable.ss05,
+        R.drawable.ss06,
+        R.drawable.ss07,
+        R.drawable.ss08,
+        R.drawable.ss09,
+        R.drawable.ss10,
+        R.drawable.ss11,
+        R.drawable.ss12,
+        R.drawable.ss13
     )
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
     private lateinit var ctx: Context
-    private val SUNSET_STRING = "SunsetString"
+    private val sunsetString = "SunsetString"
     private lateinit var sunsetView: FrameLayout
     private lateinit var mSunset: TextView
     private lateinit var mTimer: TextView
     private lateinit var mSunsetImageView: ImageView
     private lateinit var imgCardView: CardView
-    private var cardViewHeight: Int = 0
     private lateinit var progressBar: ProgressBar
-    private lateinit var frameLayout: FrameLayout
+    private var cardViewHeight: Int = 0
+    private var randomIndex: Int = 0
+    private var timer: CountDownTimer? = null
     private var widthFrame: Int = 0
     private var timeOfSunset: String? = null
     private var sunsetMessage: String? = null
@@ -100,7 +111,7 @@ class SunsetFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        timeOfSunset = savedInstanceState?.getString(SUNSET_STRING)
+        timeOfSunset = savedInstanceState?.getString(sunsetString)
         pageViewModel = ViewModelProvider(this).get(PageViewModel::class.java).apply {
             setIndex(arguments?.getInt(ARG_SECTION_NUMBER) ?: 1)
         }
@@ -122,22 +133,20 @@ class SunsetFragment : Fragment() {
         mTimer = view.findViewById(R.id.sunset_timer_tv)
         mSunsetImageView = view.findViewById(R.id.sunset_iv)
         progressBar = view.findViewById(R.id.progress_bar)
-        frameLayout = view.findViewById(R.id.container)
-        imgCardView = view.findViewById(R.id.cardView3_img)
-        calculationAndSetTimer()
+        imgCardView = view.findViewById(R.id.cardView3)
         progressBar.visibility = View.GONE
-
-        val viewTreeObserver = frameLayout.viewTreeObserver
+        imgCardView.visibility = View.GONE
+        val viewTreeObserver = sunsetView.viewTreeObserver
         if (viewTreeObserver.isAlive) {
             viewTreeObserver.addOnGlobalLayoutListener(object :
                 ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
-                    frameLayout.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    widthFrame = frameLayout.width
+                    sunsetView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    widthFrame = sunsetView.width
                 }
             })
         }
-
+        calculationAndSetTimer()
     }
 
     override fun onResume() {
@@ -146,9 +155,11 @@ class SunsetFragment : Fragment() {
             return
         }
         val activityFab: FloatingActionButton = (activity as? MainActivity)?.binding?.fab
-            ?: error("Can only access if attached to MainActivity")
+        //Can only access if attached to MainActivity
+            ?: error(getString(R.string.sunset_error))
 
         activityFab.setOnClickListener(View.OnClickListener {
+            progressBar.visibility = View.VISIBLE
             if (timeOfSunset != null) {
                 calculationAndSetTimer()
             } else {
@@ -159,7 +170,7 @@ class SunsetFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(SUNSET_STRING, timeOfSunset)
+        outState.putString(sunsetString, timeOfSunset)
     }
 
     override fun onStop() {
@@ -178,7 +189,6 @@ class SunsetFragment : Fragment() {
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        Log.d(TAG, "onRequestPermissionsResult: ")
         if (requestCode == REQUEST_FINE_LOCATION_PERMISSIONS_REQUEST_CODE) {
             when {
                 grantResults.isEmpty() ->
@@ -217,13 +227,12 @@ class SunsetFragment : Fragment() {
     }
 
     private fun retrieve(latitude: Double, longitude: Double) {
-        Log.d(TAG, "retrieve: GETTING COORDINATES")
         // Create a Coroutine scope using a job to be able to cancel when needed
         val adviceActivityJob = Job()
 
         // Handle exceptions if any
         val errorHandler = CoroutineExceptionHandler { _, exception ->
-            AlertDialog.Builder(ctx).setTitle("Error")
+            AlertDialog.Builder(ctx).setTitle(getString(R.string.alert_dialog_error))
                 .setMessage(exception.message)
                 .setPositiveButton(android.R.string.ok) { _, _ -> }
                 .setIcon(R.drawable.ic_apple).show()
@@ -235,15 +244,12 @@ class SunsetFragment : Fragment() {
             val result = SunsetRetriever().getSunset(latitude, longitude)
             // set text
             timeOfSunset = result.results.sunset.toDate().formatTo("HH:mm:ss")
-            Log.d(TAG, "retrieve: $timeOfSunset")
-            Log.d(TAG, "retrieve, orig: ${result.results.sunset}")
-            Log.d(TAG, "retrieve, toDate: ${result.results.sunset.toDate()}")
+
             calculationAndSetTimer()
         }
     }
 
     private fun getLocationRequest() {
-        Log.d(TAG, "getLocationRequest: ")
         val permissionApproved =
             ctx.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)
         if (permissionApproved) {
@@ -265,7 +271,6 @@ class SunsetFragment : Fragment() {
      */
     @SuppressLint("MissingPermission")
     private fun requestCurrentLocation() {
-        Log.d(TAG, "requestCurrentLocation: ")
         progressBar.visibility = View.VISIBLE
         if (ctx.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
 
@@ -284,43 +289,35 @@ class SunsetFragment : Fragment() {
             )
 
             currentLocationTask.addOnCompleteListener { task: Task<Location> ->
-                Log.d(TAG, "task is Successful ${task.isSuccessful} ")
-                Log.d(TAG, "task result is not null ${task.result != null} ")
+
                 val result = if (task.isSuccessful && task.result != null) {
                     val result: Location = task.result
-                    Log.d(TAG, "Location (success): ${result.latitude}, ${result.longitude}")
-                    Log.d(TAG, "Internet: ${Utils.isNetworkConnected(ctx)} ")
                     if (Utils.isNetworkConnected(ctx)) {
-                        Log.d(TAG, "requestCurrentLocation: retrieve")
                         retrieve(result.latitude, result.longitude)
                     } else {
-                        Log.d(TAG, "requestCurrentLocation: no Internet connection")
-                        AlertDialog.Builder(ctx).setTitle("No Internet Connection")
-                            .setMessage("Please check your internet connection and try again")
+                        AlertDialog.Builder(ctx)
+                            .setTitle(getString(R.string.no_internet_connection))
+                            .setMessage(getString(R.string.check_internet_connection))
                             .setPositiveButton(R.string.ok) { _, _ -> }
                             .setIcon(R.drawable.ic_apple).show()
                     }
-//                    mLatitude = result.latitude.toString()
-//                    mLongitude = result.longitude.toString()
+                    val mLatitude = result.latitude.toString()
+                    val mLongitude = result.longitude.toString()
+                    Log.d(TAG, "mLatitude: ${mLatitude}")
+                    Log.d(TAG, "mLongitude: ${mLongitude}")
                 } else {
                     val exception = task.exception
                     "Location (failure): $exception"
-                    Log.d(TAG, "requestCurrentLocation: Location (failure): $exception")
                 }
-
-                Log.d(TAG, "getCurrentLocation() result: $result")
             }
-        } else {
-            Log.d(TAG, "requestCurrentLocation: SOMETHING WRONG WITH PERMISSIONS")
         }
-        progressBar.visibility = View.GONE
+        calculationAndSetTimer()
     }
 
     /**
      * Helper functions to simplify permission checks/requests.
      */
     private fun Context.hasPermission(permission: String): Boolean {
-        Log.d(TAG, "hasPermission:")
 
         // Background permissions didn't exit prior to Q, so it's approved by default.
         if (permission == Manifest.permission.ACCESS_BACKGROUND_LOCATION &&
@@ -345,7 +342,6 @@ class SunsetFragment : Fragment() {
         requestCode: Int,
         snackbar: Snackbar
     ) {
-        Log.d(TAG, "requestPermissionWithRationale: ")
         val provideRationale = shouldShowRequestPermissionRationale(permission)
         if (provideRationale) {
             snackbar.show()
@@ -355,65 +351,79 @@ class SunsetFragment : Fragment() {
     }
 
     private fun setUi() {
+        progressBar.visibility = View.GONE
 
-        //set cardview height for main image
+        //set cardView height for main image
         if (cardViewHeight == 300 || cardViewHeight == 0) {
             cardViewHeight = if (widthFrame == 0) 300 else {
                 ((widthFrame - 32) / 1.3).toInt()
             }
         }
 
+        //set cardView height
         val layoutParams = imgCardView.layoutParams
         layoutParams.height = cardViewHeight
 
         val options = RequestOptions()
         options.centerCrop()
         Glide.with(mSunsetImageView.context)
-            .load(sunsets.random())
+            .load(getRandomImg())
             .apply(options)
             .into(mSunsetImageView)
         mSunset.text = sunsetMessage
     }
 
-    private fun calculationAndSetTimer() {
-        Log.d(TAG, "calculationAndSetTimer: $timeOfSunset")
+    private fun getRandomImg(): Any {
+        var ind = (sunsets.indices).random()
+        if (randomIndex == ind) {
+            while (randomIndex == ind) {
+                ind = (sunsets.indices).random()
+            }
+        }
+        randomIndex = ind
+        return sunsets[randomIndex]
+    }
 
+    private fun calculationAndSetTimer() {
+        mTimer.visibility = View.GONE
         if (timeOfSunset != null) {
+            imgCardView.visibility = View.VISIBLE
             val currentTime = getCurrentDateTime().toString("HH:mm:ss")
-            Log.d(TAG, "current time: $currentTime")
             val sunsetTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).parse(timeOfSunset)
                 .toString("HH:mm:ss")
-            Log.d(TAG, "sunset time: $sunsetTime")
             val currentDtm = currentTime.toDate("HH:mm:ss")
             val sunsetDtm = sunsetTime.toDate("HH:mm:ss")
             val diffInMilliSec: Long = (currentDtm.time - sunsetDtm.time).absoluteValue
             val diffInMin: Long = TimeUnit.MILLISECONDS.toMinutes(diffInMilliSec)
-            Log.d(TAG, "difference in min: $diffInMin")
 
             if (diffInMin < 15 && currentDtm.before(sunsetDtm)) {
-                sunsetMessage = "The sunset will begin at $timeOfSunset. Hurry up."
+                sunsetMessage =
+                    getString(R.string.the_sunset_will_begin_at) + timeOfSunset + getString(R.string.hurry_up)
                 startTimer(diffInMilliSec)
 
             } else if (currentDtm.before(sunsetDtm)) {
                 sunsetMessage =
-                    "The sunset will be at $timeOfSunset. You have enough time to see it"
+                    getString(R.string.the_sunset_will_begin_at) + timeOfSunset + getString(R.string.you_have_enough_time)
                 startTimer(diffInMilliSec)
 
             } else if (sunsetDtm.after(currentDtm) && diffInMin < 15) {
-                sunsetMessage = "The sunset has been started. Just find the closest spot and enjoy."
+                sunsetMessage = getString(R.string.sunset_in_progress)
                 startTimer(diffInMilliSec)
 
             } else {
-                sunsetMessage = "The sunset was at $timeOfSunset. You lost this sunset. It's gone."
+                sunsetMessage = getString(R.string.sunset_was_at) + timeOfSunset + getString(R.string.you_lost_it)
             }
         } else {
-            sunsetMessage = "Want to enjoy the sunset? Push the button."
+            imgCardView.visibility = View.GONE
+            sunsetMessage = getString(R.string.want_to_enjoy)
         }
         setUi()
     }
 
     private fun startTimer(timeToSunsetMills: Long) {
-        val timer = object : CountDownTimer(timeToSunsetMills, 1000) {
+        mTimer.visibility = View.VISIBLE
+        timer?.cancel()
+        timer = object : CountDownTimer(timeToSunsetMills, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val f: NumberFormat = DecimalFormat("00")
                 val hour = millisUntilFinished / 3600000 % 24
@@ -425,12 +435,11 @@ class SunsetFragment : Fragment() {
                     .plus(":")
                     .plus(f.format(sec))
             }
-
             override fun onFinish() {
-                mTimer.text = "Now it's time to enjoy your sunset"
+                mTimer.text = getString(R.string.now_it_time)
             }
         }
-        timer.start()
+        timer?.start()
     }
 
     override fun setUserVisibleHint(visible: Boolean) {

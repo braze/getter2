@@ -74,7 +74,6 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_gravity="center"
-                android:text="@string/flip_tv"
                 android:textAlignment="center"
                 android:textColor="?android:attr/colorMultiSelectHighlight"
                 android:textSize="64sp" />

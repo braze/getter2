@@ -4,18 +4,60 @@
     <string name="tab_text_2">CIA database</string>
     <string name="tab_text_3">Sunset</string>
 
-    <string name="flip_tv">TextView</string>
     <string name="flip_iv_contentDescription">nice picture</string>
-    <string name="flip_refresh_btn_name">flip</string>
     <string name="flip_progress_bar_msg">thinking…</string>
-    <string name="ok">OK</string>
     <string name="flip_push_the_button">Flip the coin</string>
-    <string name="cia_full_name">Central\nIntelligence\nAgency</string>
-    <string name="sunset_contentDescription">sunset content</string>
+    <string name="ok">OK</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="alert_dialog_error">Error</string>
+    <string name="no_internet_connection">No Internet Connection</string>
+    <string name="check_internet_connection">Please check your internet connection and try again</string>
+
+    <string name="connected_to_database">Connected to the database.</string>
+    <string name="magnifier">Use magnifier for the search</string>
+    <string name="database_error">CIA DATABASE ERROR</string>
+    <string name="no_data">no data</string>
+    <string name="check_input">check your input</string>
+    <string name="private_person_data">private person data</string>
+    <string name="salutation">Salutation:\u0020</string>
+    <string name="first_name">First name:\u0020</string>
+    <string name="last_name">Last name:\u0020</string>
+    <string name="international">International:\u0020</string>
+    <string name="first_name_validated">First name validated:\u0020</string>
+    <string name="first_name_gender">First name gender:\u0020</string>
+    <string name="first_name_deviation">First name gender deviation\u0020</string>
+    <string name="unisex_name">Is name unisex:\u0020</string>
+    <string name="possible_country">Possible country:\u0020</string>
+    <string name="certainty_country">Certainty country:\u0020</string>
+    <string name="frequency_in_country">Frequency in the country:\u0020</string>
+    <string name="other_possible_country_for_name">Other possible countries for the first name:\u0020</string>
+    <string name="last_name_validated">Last name validated:\u0020</string>
+    <string name="country">Country:\u0020</string>
+    <string name="country_code">Country code:\u0020</string>
+    <string name="country_alpha_code">Country alpha code:\u0020</string>
+    <string name="continent">Country continent: </string>
+    <string name="language">Country primary language:\u0020</string>
+    <string name="currency">Country currency:\u0020</string>
+    <string name="other_possible_country">Other possible countries:\u0020</string>
+
+
+
+
     <string name="fine_location_permission_rationale">The fine location permission is needed for core functionality.</string>
     <string name="fine_permission_denied_explanation">Fine location permission was denied but is needed for core functionality.</string>
     <string name="permission_approved_explanation">You approved FINE location, carry (and click) on!</string>
-
+    <string name="sunset_contentDescription">sunset</string>
+    <string name="sunset_error">Looks like an error</string>
+    <string name="the_sunset_will_begin_at">The sunset will begin at\u0020</string>
+    <string name="hurry_up">. Hurry up.</string>
+    <string name="you_have_enough_time">. You have enough time to see it</string>
+    <string name="sunset_in_progress">The sunset has been started. Just find the closest spot and enjoy.</string>
+    <string name="sunset_was_at">The sunset was at\u0020</string>
+    <string name="you_lost_it">. \nYou lost this sunset. It\'s gone.</string>
+    <string name="want_to_enjoy">Want to enjoy the sunset? Push the button.</string>
+    <string name="now_it_time">Now it\'s time to enjoy your sunset</string>
+    <string name="cia_full_name">Central\nIntelligence\nAgency</string>
 
 
 </resources>

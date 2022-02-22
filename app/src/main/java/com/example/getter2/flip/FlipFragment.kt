@@ -30,8 +30,8 @@ class FlipFragment : Fragment() {
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
-    private val ANSWER_KEY = "Answer"
-    private val IMAGE_KEY = "img"
+    private val answerKey = "Answer"
+    private val imageKey = "img"
 
     // Animation
     var animUpDown: Animation? = null
@@ -50,8 +50,8 @@ class FlipFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mImage = savedInstanceState?.getString(IMAGE_KEY)
-        mAnswer = savedInstanceState?.getString(ANSWER_KEY)
+        mImage = savedInstanceState?.getString(imageKey)
+        mAnswer = savedInstanceState?.getString(answerKey)
         pageViewModel = ViewModelProvider(this).get(PageViewModel::class.java).apply {
             setIndex(arguments?.getInt(ARG_SECTION_NUMBER) ?: 1)
         }
@@ -110,8 +110,8 @@ class FlipFragment : Fragment() {
             if (Utils.isNetworkConnected(ctx)) {
                 retrieve()
             } else {
-                AlertDialog.Builder(ctx).setTitle("No Internet Connection")
-                    .setMessage("Please check your internet connection and try again")
+                AlertDialog.Builder(ctx).setTitle(getString(R.string.no_internet_connection))
+                    .setMessage(getString(R.string.check_internet_connection))
                     .setPositiveButton(R.string.ok) { _, _ -> }
                     .setIcon(R.drawable.ic_apple).show()
             }
@@ -126,7 +126,7 @@ class FlipFragment : Fragment() {
 
         // Handle exceptions if any
         val errorHandler = CoroutineExceptionHandler { _, exception ->
-            AlertDialog.Builder(ctx).setTitle("Error")
+            AlertDialog.Builder(ctx).setTitle(getString(R.string.alert_dialog_error))
                 .setMessage(exception.message)
                 .setPositiveButton(android.R.string.ok) { _, _ -> }
                 .setIcon(R.drawable.ic_apple).show()
@@ -139,8 +139,12 @@ class FlipFragment : Fragment() {
             val result = FlipRetriever().getFlip()
             //set image to ImageView
             mImage = result.image
-            mAnswer = result.answer
-
+            val textAnswer = result.answer
+            mAnswer = if (textAnswer.equals("Yes")) {
+                getString(R.string.yes)
+            } else {
+                getString(R.string.no)
+            }
             setUi()
         }
     }
@@ -148,7 +152,7 @@ class FlipFragment : Fragment() {
     //set up UI elements and data
     private fun setUi() {
 
-        //set cardview height for main image
+        //set cardView height for main image
         if (outerCardViewHeight == 300 || outerCardViewHeight == 0) {
             outerCardViewHeight = if (widthFrame == 0) 300 else {
                 ((widthFrame - 32) / 1.3).toInt()
@@ -182,8 +186,8 @@ class FlipFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(ANSWER_KEY, mAnswer)
-        outState.putString(IMAGE_KEY, mImage)
+        outState.putString(answerKey, mAnswer)
+        outState.putString(imageKey, mImage)
     }
 
     companion object {

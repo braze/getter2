@@ -30,19 +30,19 @@ class NameFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private val DB_STRING = "DataBaseString"
+    private val dbString = "DataBaseString"
     private lateinit var ctx: Context
     private lateinit var mMeme: TextView
     private lateinit var mFooter: TextView
     private lateinit var progressBar: ProgressBar
-    private var mResponse: String? = "Connected to the database."
+    private var mResponse: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mResponse = savedInstanceState?.getString(DB_STRING) ?: "Connected to the database."
+        mResponse = savedInstanceState?.getString(dbString) ?: getString(R.string.connected_to_database)
         pageViewModel = ViewModelProvider(this).get(PageViewModel::class.java).apply {
-            setIndex(arguments?.getInt(NameFragment.ARG_SECTION_NUMBER) ?: 1)
+            setIndex(arguments?.getInt(ARG_SECTION_NUMBER) ?: 1)
         }
     }
 
@@ -58,11 +58,12 @@ class NameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mFooter = view.findViewById(R.id.footer)
-        mFooter.text = "Use magnifier for the search"
+        mFooter.text = getString(R.string.magnifier)
         mMeme = view.findViewById(R.id.advice_body_tv)
         mMeme.movementMethod = ScrollingMovementMethod()
         //init progress bar
         progressBar = view.findViewById(R.id.progress_bar)
+        mResponse = getString(R.string.connected_to_database)
         progressBar.visibility = View.GONE
         setUi()
     }
@@ -92,7 +93,7 @@ class NameFragment : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(DB_STRING, mResponse)
+        outState.putString(dbString, mResponse)
         super.onSaveInstanceState(outState)
     }
 
@@ -105,7 +106,7 @@ class NameFragment : Fragment() {
 
             // Handle exceptions if any
             val errorHandler = CoroutineExceptionHandler { _, exception ->
-                AlertDialog.Builder(ctx).setTitle("CIA DATABASE ERROR")
+                AlertDialog.Builder(ctx).setTitle(getString(R.string.database_error))
                     .setMessage(exception.message)
                     .setPositiveButton(android.R.string.ok) { _, _ -> }
                     .setIcon(R.drawable.ic_apple).show()
@@ -119,52 +120,78 @@ class NameFragment : Fragment() {
                 // set text
                 val countriesForFirstName =
                     getCountriesList(result.data[0].name.firstname.alternative_countries)
-//                val countriesForLastName =
-//                    getCountriesList(result.data[0].name.lastname.alternative_countries)
                 val countriesForFullName =
                     getCountriesList(result.data[0].country.alternative_countries)
                 val possibleCountry =
-                    if (result.data[0].name.lastname.country_code == null) "no data"
+                    if (result.data[0].name.lastname.country_code == null) getString(R.string.no_data)
                     else result.data[0].name.lastname.country_code
 
-                mResponse = "Salutation: ${result.data[0].salutation.salutation} " +
-                        "${result.data[0].salutation.lastname}\n" +
-                        "First name: ${result.data[0].name.firstname.name}\n" +
-                        "Last name: ${result.data[0].name.lastname.name}\n" +
-                        "International: ${result.data[0].name.firstname.name_ascii} ${result.data[0].name.lastname.name_ascii}\n" +
-                        "First name validated: ${result.data[0].name.firstname.validated}\n" +
-                        "First name gender: ${result.data[0].name.firstname.gender_formatted}\n" +
-                        "First name gender deviation ${result.data[0].name.firstname.gender_deviation}\n" +
-                        "Is name unisex: ${result.data[0].name.firstname.unisex}\n" +
-                        "Possible country: ${result.data[0].name.firstname.country_code}\n" +
-                        "Certainty country: ${result.data[0].name.firstname.country_certainty}%\n" +
-                        "Frequency in the country: ${result.data[0].name.firstname.country_frequency}\n" +
-                        "Other possible countries for the first name: $countriesForFirstName" +
-                        "\nLast name: ${result.data[0].name.lastname.name}\n" +
-                        "International: ${result.data[0].name.lastname.name_ascii}\n" +
-                        "Last name validated: ${result.data[0].name.lastname.validated}\n" +
-                        "Possible country: ${possibleCountry}\n" +
-                        "Certainty country: ${result.data[0].name.lastname.country_certainty}%\n" +
-                        "Frequency in the country: ${result.data[0].name.lastname.country_frequency}\n" +
-//                        "Other possible countries for the last name: $countriesForLastName" +
-                        "\nCountry: ${result.data[0].country.name}\n" +
-                        "Country code: ${result.data[0].country.country_code}\n" +
-                        "Country alpha code: ${result.data[0].country.country_code_alpha}\n" +
-                        "Country continent: ${result.data[0].country.continent}\n" +
-                        "Country primary language: ${result.data[0].country.name}\n" +
-                        "Country currency: ${result.data[0].country.currency}\n" +
-                        "Country certainty: ${result.data[0].country.country_certainty}\n" +
-                        "Other possible countries: $countriesForFullName"
+                mResponse = getString(R.string.salutation)
+                    .plus(result.data[0].salutation.salutation)
+                    .plus(" ")
+                    .plus(result.data[0].salutation.lastname).plus("\n")
+                    .plus(getString(R.string.first_name))
+                    .plus(result.data[0].name.firstname.name).plus("\n")
+                    .plus(getString(R.string.last_name))
+                    .plus(result.data[0].name.lastname.name).plus("\n")
+                    .plus(getString(R.string.international))
+                    .plus(result.data[0].name.firstname.name_ascii).plus(" ")
+                    .plus(result.data[0].name.lastname.name_ascii).plus("\n")
+                    .plus(getString(R.string.first_name_validated))
+                    .plus(result.data[0].name.firstname.validated).plus("\n")
+                    .plus(getString(R.string.first_name_gender))
+                    .plus(result.data[0].name.firstname.gender_formatted).plus("\n")
+                    .plus(getString(R.string.first_name_deviation))
+                    .plus(result.data[0].name.firstname.gender_deviation).plus("\n")
+                    .plus(getString(R.string.unisex_name))
+                    .plus(result.data[0].name.firstname.unisex).plus("\n")
+                    .plus(getString(R.string.possible_country))
+                    .plus(result.data[0].name.firstname.country_code).plus("\n")
+                    .plus(getString(R.string.certainty_country))
+                    .plus(result.data[0].name.firstname.country_certainty).plus("%\n")
+                    .plus(getString(R.string.frequency_in_country))
+                    .plus(result.data[0].name.firstname.country_frequency).plus("\n")
+                    .plus(getString(R.string.frequency_in_country))
+                    .plus(countriesForFirstName).plus("\n\n")
+                    .plus(getString(R.string.last_name))
+                    .plus(result.data[0].name.lastname.name).plus("\n")
+                    .plus(getString(R.string.international))
+                    .plus(result.data[0].name.lastname.name_ascii).plus("\n")
+                    .plus(getString(R.string.last_name_validated))
+                    .plus(result.data[0].name.lastname.validated).plus("\n")
+                    .plus(getString(R.string.possible_country))
+                    .plus(possibleCountry).plus("\n")
+                    .plus(getString(R.string.certainty_country))
+                    .plus(result.data[0].name.lastname.country_certainty).plus("%\n")
+                    .plus(getString(R.string.frequency_in_country))
+                    .plus(result.data[0].name.lastname.country_frequency).plus("\n")
+                    .plus(getString(R.string.country))
+                    .plus(result.data[0].country.name).plus("\n")
+                    .plus(getString(R.string.country_code))
+                    .plus(result.data[0].country.country_code).plus("\n")
+                    .plus(getString(R.string.country_alpha_code))
+                    .plus(result.data[0].country.country_code_alpha).plus("\n")
+                    .plus(getString(R.string.continent))
+                    .plus(result.data[0].country.continent).plus("\n")
+                    .plus(getString(R.string.language))
+                    .plus(result.data[0].country.name).plus("\n")
+                    .plus(getString(R.string.currency))
+                    .plus(result.data[0].country.currency).plus("\n")
+                    .plus(getString(R.string.certainty_country))
+                    .plus(result.data[0].country.country_certainty).plus("\n")
+                    .plus(getString(R.string.other_possible_country))
+                    .plus(countriesForFullName)
+
                 setUi()
             }
         } catch (e: Exception) {
-            mResponse = "check your input"
+            mResponse = getString(R.string.check_input)
         }
 
     }
 
     private fun setUi() {
-        if (mResponse.equals("Connected to the database.")) {
+        if (mResponse.equals(getString(R.string.connected_to_database))) {
             mFooter.visibility = View.VISIBLE;
         } else {
             mFooter.visibility = View.GONE
@@ -174,7 +201,6 @@ class NameFragment : Fragment() {
     }
 
     private fun getCountriesList(jsonObject: JsonObject): String {
-        Log.d("TAG", "START getCountriesList method $jsonObject")
         var string = "\n"
         jsonObject.keySet().forEach {
             string = string.plus("  ").plus(it).plus(" : ").plus(jsonObject.get(it)).plus("%\n")
@@ -195,7 +221,8 @@ class NameFragment : Fragment() {
             return
         }
         val activityFab: FloatingActionButton = (activity as? MainActivity)?.binding?.fab
-            ?: error("Can only access if attached to MainActivity")
+            //Can only access if attached to MainActivity
+            ?: error(getString(R.string.sunset_error))
 
         activityFab.setOnClickListener(View.OnClickListener {
             //Inflate the dialog with custom view
@@ -203,7 +230,7 @@ class NameFragment : Fragment() {
             //AlertDialogBuilder
             val mBuilder = AlertDialog.Builder(ctx)
                 .setView(mDialogView)
-                .setTitle("private person data")
+                .setTitle(getString(R.string.private_person_data))
             //show dialog
             val mAlertDialog = mBuilder.show()
             //login button click of custom layout
@@ -223,13 +250,13 @@ class NameFragment : Fragment() {
                     if (Utils.isNetworkConnected(ctx)) {
                         retrieve(fullName)
                     } else {
-                        AlertDialog.Builder(ctx).setTitle("No Internet Connection")
-                            .setMessage("Please check your internet connection and try again")
+                        AlertDialog.Builder(ctx).setTitle(getString(R.string.no_internet_connection))
+                            .setMessage(getString(R.string.check_internet_connection))
                             .setPositiveButton(R.string.ok) { _, _ -> }
                             .setIcon(R.drawable.ic_apple).show()
                     }
                 } else {
-                    Toast.makeText(ctx, "Check your input", Toast.LENGTH_LONG).show()
+                    Toast.makeText(ctx, getString(R.string.check_input), Toast.LENGTH_LONG).show()
                 }
             }
 
