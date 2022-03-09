@@ -29,7 +29,6 @@ class NameFragment : Fragment() {
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
     private val dbString = "DataBaseString"
     private lateinit var ctx: Context
     private lateinit var mMeme: TextView
@@ -268,6 +267,5 @@ class NameFragment : Fragment() {
             }
         })
     }
-
 
 }

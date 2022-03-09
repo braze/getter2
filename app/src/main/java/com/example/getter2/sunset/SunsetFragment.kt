@@ -68,7 +68,6 @@ class SunsetFragment : Fragment() {
     )
 
     // This property is only valid between onCreateView and onDestroyView.
-    private val binding get() = _binding!!
     private lateinit var ctx: Context
     private val sunsetString = "SunsetString"
     private lateinit var sunsetView: FrameLayout
@@ -129,13 +128,14 @@ class SunsetFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sunsetView = view.findViewById(R.id.container)
+        progressBar = view.findViewById(R.id.progress_bar_sunset)
+        imgCardView = view.findViewById(R.id.cardView3)
+        mSunsetImageView = view.findViewById(R.id.sunset_iv)
         mSunset = view.findViewById(R.id.sunset_tv)
         mTimer = view.findViewById(R.id.sunset_timer_tv)
-        mSunsetImageView = view.findViewById(R.id.sunset_iv)
-        progressBar = view.findViewById(R.id.progress_bar)
-        imgCardView = view.findViewById(R.id.cardView3)
         progressBar.visibility = View.GONE
         imgCardView.visibility = View.GONE
+        mSunsetImageView.visibility = View.GONE
         val viewTreeObserver = sunsetView.viewTreeObserver
         if (viewTreeObserver.isAlive) {
             viewTreeObserver.addOnGlobalLayoutListener(object :
@@ -160,6 +160,9 @@ class SunsetFragment : Fragment() {
 
         activityFab.setOnClickListener(View.OnClickListener {
             progressBar.visibility = View.VISIBLE
+            imgCardView.visibility = View.GONE
+            mSunsetImageView.visibility = View.GONE
+            mTimer.visibility = View.GONE
             if (timeOfSunset != null) {
                 calculationAndSetTimer()
             } else {
@@ -271,7 +274,6 @@ class SunsetFragment : Fragment() {
      */
     @SuppressLint("MissingPermission")
     private fun requestCurrentLocation() {
-        progressBar.visibility = View.VISIBLE
         if (ctx.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
 
             // Returns a single current location fix on the device. Unlike getLastLocation() that
@@ -351,7 +353,6 @@ class SunsetFragment : Fragment() {
     }
 
     private fun setUi() {
-        progressBar.visibility = View.GONE
 
         //set cardView height for main image
         if (cardViewHeight == 300 || cardViewHeight == 0) {
@@ -363,14 +364,18 @@ class SunsetFragment : Fragment() {
         //set cardView height
         val layoutParams = imgCardView.layoutParams
         layoutParams.height = cardViewHeight
-
-        val options = RequestOptions()
-        options.centerCrop()
-        Glide.with(mSunsetImageView.context)
-            .load(getRandomImg())
-            .apply(options)
-            .into(mSunsetImageView)
         mSunset.text = sunsetMessage
+        if (!sunsetMessage.equals(getString(R.string.want_to_enjoy))) {
+            val options = RequestOptions()
+            options.centerCrop()
+            Glide.with(mSunsetImageView.context)
+                .load(getRandomImg())
+                .apply(options)
+                .into(mSunsetImageView)
+            progressBar.visibility = View.GONE
+            imgCardView.visibility = View.VISIBLE
+            mSunsetImageView.visibility = View.VISIBLE
+        }
     }
 
     private fun getRandomImg(): Any {
@@ -385,9 +390,7 @@ class SunsetFragment : Fragment() {
     }
 
     private fun calculationAndSetTimer() {
-        mTimer.visibility = View.GONE
         if (timeOfSunset != null) {
-            imgCardView.visibility = View.VISIBLE
             val currentTime = getCurrentDateTime().toString("HH:mm:ss")
             val sunsetTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).parse(timeOfSunset)
                 .toString("HH:mm:ss")
@@ -411,10 +414,10 @@ class SunsetFragment : Fragment() {
                 startTimer(diffInMilliSec)
 
             } else {
-                sunsetMessage = getString(R.string.sunset_was_at) + timeOfSunset + getString(R.string.you_lost_it)
+                sunsetMessage =
+                    getString(R.string.sunset_was_at) + timeOfSunset + getString(R.string.you_lost_it)
             }
         } else {
-            imgCardView.visibility = View.GONE
             sunsetMessage = getString(R.string.want_to_enjoy)
         }
         setUi()
@@ -435,6 +438,7 @@ class SunsetFragment : Fragment() {
                     .plus(":")
                     .plus(f.format(sec))
             }
+
             override fun onFinish() {
                 mTimer.text = getString(R.string.now_it_time)
             }

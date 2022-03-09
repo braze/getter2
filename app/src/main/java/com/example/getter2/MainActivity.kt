@@ -29,14 +29,8 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = binding.tabs
         tabs.setupWithViewPager(viewPager)
-//        val fab: FloatingActionButton = binding.fab
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.hide()
-
-//        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-//        }
 
         viewPager.addOnPageChangeListener(object : OnPageChangeListener {
             override fun onPageScrolled(
@@ -61,10 +55,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             override fun onPageScrollStateChanged(state: Int) {
-//                when (state) {
-//                    ViewPager.SCROLL_STATE_IDLE -> fab.show()
-//                    ViewPager.SCROLL_STATE_DRAGGING, ViewPager.SCROLL_STATE_SETTLING -> fab.hide()
-//                }
+                //just nothing
             }
         })
     }

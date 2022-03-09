@@ -35,9 +35,9 @@
     <string name="country">Страна:</string>
     <string name="country_code">Код страны:</string>
     <string name="country_alpha_code">Буквенный код страны:</string>
-    <string name="continent">Country continent:</string>
+    <string name="continent">Континент:</string>
     <string name="language">Основной язык страны:</string>
-    <string name="currency">Country currency:</string>
+    <string name="currency">Валюта страны:</string>
     <string name="other_possible_country">Другие возможные страны:</string>
     <string name="fine_location_permission_rationale">Разрешение точного местоположения необходимо для основных функций.</string>
     <string name="fine_permission_denied_explanation">В разрешении на определение точного местоположения было отказано, но оно необходимо для основных функций.</string>
@@ -52,5 +52,5 @@
     <string name="you_lost_it">. Этот закат потерян. Его больше нет.</string>
     <string name="want_to_enjoy">Хочешь насладиться закатом? Нажми на кнопку.</string>
     <string name="now_it_time">Теперь пришло время насладиться закатом</string>
-    <string name="cia_full_name">Центральное\nБюро\nРасследований</string>
+    <string name="cia_full_name">Центральное Бюро Расследований</string>
 </resources>

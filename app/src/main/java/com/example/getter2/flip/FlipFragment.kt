@@ -29,7 +29,6 @@ class FlipFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
 
     // This property is only valid between onCreateView and onDestroyView.
-    private val binding get() = _binding!!
     private val answerKey = "Answer"
     private val imageKey = "img"
 
