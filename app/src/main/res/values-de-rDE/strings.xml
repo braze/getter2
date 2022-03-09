@@ -39,18 +39,19 @@
     <string name="language">Hauptsprache des Landes:\u0020</string>
     <string name="currency">Land valuta:\u0020</string>
     <string name="other_possible_country">Andere mögliche Länder:</string>
+
     <string name="fine_location_permission_rationale">Für grundlegende Funktionen ist die Erlaubnis zur genauen Ortung erforderlich.</string>
     <string name="fine_permission_denied_explanation">Die Berechtigung zur Ortung wurde verweigert, ist aber für grundlegende Funktionen erforderlich.</string>
     <string name="permission_approved_explanation">Du hast den Ort genehmigt, mach weiter!</string>
     <string name="sunset_contentDescription">Sonnenuntergang</string>
     <string name="sunset_error">Sieht aus wie ein Fehler</string>
-    <string name="the_sunset_will_begin_at">Der Sonnenuntergang beginnt um</string>
-    <string name="hurry_up">. Eile</string>
+    <string name="the_sunset_will_begin_at">Der Sonnenuntergang beginnt um\u0020</string>
+    <string name="hurry_up">. Eile.</string>
     <string name="you_have_enough_time">. Sie haben genug Zeit, um es zu sehen</string>
     <string name="sunset_in_progress">Der Sonnenuntergang hat begonnen. Finden Sie einfach den nächstgelegenen Ort und genießen Sie.</string>
-    <string name="sunset_was_at">Der Sonnenuntergang war um</string>
-    <string name="you_lost_it">. Dieser Sonnenuntergang ist verloren. Er ist nicht mehr.</string>
-    <string name="want_to_enjoy">Möchten Sie den Sonnenuntergang genießen? Drücken Sie den Knopf.</string>
+    <string name="sunset_was_at">Der Sonnenuntergang war um\u0020</string>
+    <string name="you_lost_it">. \nDieser Sonnenuntergang ist verloren. Er ist nicht mehr.</string>
+    <string name="want_to_enjoy">Möchten Sie den Sonnenuntergang genießen?\nDrücken Sie den Knopf.</string>
     <string name="now_it_time">Jetzt ist es an der Zeit, den Sonnenuntergang zu genießen</string>
-    <string name="cia_full_name">Zentrales Ermittlungsbüro</string>
+    <string name="cia_full_name">Zentrales\nErmittlungsbüro</string>
 </resources>

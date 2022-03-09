@@ -138,8 +138,8 @@ class FlipFragment : Fragment() {
             val result = FlipRetriever().getFlip()
             //set image to ImageView
             mImage = result.image
-            val textAnswer = result.answer
-            mAnswer = if (textAnswer.equals("Yes")) {
+            val textAnswer = result.answer?.lowercase()
+            mAnswer = if (textAnswer.equals("yes")) {
                 getString(R.string.yes)
             } else {
                 getString(R.string.no)

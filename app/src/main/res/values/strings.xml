@@ -41,9 +41,6 @@
     <string name="currency">Country currency:\u0020</string>
     <string name="other_possible_country">Other possible countries:\u0020</string>
 
-
-
-
     <string name="fine_location_permission_rationale">The fine location permission is needed for core functionality.</string>
     <string name="fine_permission_denied_explanation">Fine location permission was denied but is needed for core functionality.</string>
     <string name="permission_approved_explanation">You approved FINE location, carry (and click) on!</string>
@@ -55,7 +52,7 @@
     <string name="sunset_in_progress">The sunset has been started. Just find the closest spot and enjoy.</string>
     <string name="sunset_was_at">The sunset was at\u0020</string>
     <string name="you_lost_it">. \nYou lost this sunset. It\'s gone.</string>
-    <string name="want_to_enjoy">Want to enjoy the sunset? Push the button.</string>
+    <string name="want_to_enjoy">Want to enjoy the sunset?\nPush the button.</string>
     <string name="now_it_time">Now it\'s time to enjoy your sunset</string>
     <string name="cia_full_name">Central\nIntelligence\nAgency</string>
 
